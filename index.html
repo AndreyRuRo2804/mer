@@ -1,495 +1,260 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Merling 🌸</title>
+    <style>
+        /* =========================
+           ESTILO GENERAL
+        ========================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-<title>Merling 🌸</title>
+        body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-<style>
+        /* =========================
+           PANTALLA DE PREGUNTA
+        ========================= */
+        #pregunta {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            transition: opacity 1s ease;
+        }
 
-/* =========================
-   ESTILO GENERAL
-========================= */
+        #pregunta h1 {
+            color: #fff;
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 50px;
+            text-shadow: 0 0 15px rgba(255, 20, 147, 0.5);
+        }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+        .botones {
+            position: relative;
+            width: 300px;
+            height: 150px;
+        }
 
-body{
-    width:100%;
-    height:100vh;
-    overflow:hidden;
-    background:#000;
-    font-family:Arial, sans-serif;
-    position:relative;
-}
+        button {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+        }
 
-/* =========================
-   PREGUNTA
-========================= */
+        #si {
+            left: 20px;
+            background: #ff1493;
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 20, 147, 0.4);
+        }
 
-#pregunta{
-    position:absolute;
-    inset:0;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    z-index:100;
-    background:linear-gradient(to bottom,#0d0d0d,#1a0011);
-}
+        #si:hover { transform: scale(1.1); background: #ff69b4; }
 
-#pregunta h1{
-    color:white;
-    font-size:2rem;
-    text-align:center;
-    margin-bottom:40px;
-    padding:20px;
-}
+        #no {
+            right: 20px;
+            background: #444;
+            color: #ccc;
+        }
 
-.botones{
-    position:relative;
-    width:320px;
-    height:220px;
-}
+        /* =========================
+           ESCENA DE FLORES
+        ========================= */
+        #escena {
+            position: absolute;
+            inset: 0;
+            display: none;
+            background: linear-gradient(to bottom, #000000, #2d0a1e);
+            overflow: hidden;
+        }
 
-button{
-    padding:14px 28px;
-    border:none;
-    border-radius:14px;
-    font-size:20px;
-    cursor:pointer;
-    transition:0.2s;
-    position:absolute;
-}
+        #mensaje {
+            position: absolute;
+            top: 10%;
+            width: 100%;
+            text-align: center;
+            color: #ffb6c1;
+            font-size: 2.5rem;
+            font-weight: bold;
+            z-index: 200;
+            text-shadow: 0 0 20px #ff1493;
+            opacity: 0;
+            animation: fadeIn 2s forwards 1s;
+        }
 
-#si{
-    left:40px;
-    top:70px;
-    background:#ff1493;
-    color:white;
-    box-shadow:0 0 20px #ff1493;
-}
+        @keyframes fadeIn { to { opacity: 1; } }
 
-#si:active{
-    transform:scale(0.95);
-}
+        /* Estilo del Contenedor de la Flor SVG */
+        .flower-container {
+            position: absolute;
+            bottom: -50px;
+            transform-origin: bottom center;
+            animation: growFlower 4s ease-out forwards;
+        }
 
-#no{
-    left:180px;
-    top:70px;
-    background:white;
-    color:black;
-}
+        @keyframes growFlower {
+            0% { transform: scale(0) translateY(100px); }
+            100% { transform: scale(1) translateY(0); }
+        }
 
-/* =========================
-   ESCENA FLORES
-========================= */
+        /* =========================
+           PARTÍCULAS MÁGICAS
+        ========================= */
+        .sparkle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: fly 5s linear infinite;
+        }
 
-#escena{
-    position:absolute;
-    inset:0;
-    display:none;
-    overflow:hidden;
-    background:radial-gradient(circle at bottom,#1a0015,#000);
-}
-
-/* =========================
-   TEXTO FINAL
-========================= */
-
-#mensaje{
-    position:absolute;
-    top:7%;
-    width:100%;
-    text-align:center;
-    color:#ff69b4;
-    font-size:2rem;
-    font-weight:bold;
-    z-index:200;
-    text-shadow:0 0 20px #ff1493;
-    padding:20px;
-    opacity:0;
-    animation:aparecerTexto 3s forwards;
-    animation-delay:2s;
-}
-
-@keyframes aparecerTexto{
-    to{
-        opacity:1;
-    }
-}
-
-/* =========================
-   FLORES
-========================= */
-
-.flor{
-    position:absolute;
-    bottom:-300px;
-    width:120px;
-    height:300px;
-    animation:subirFlor 4s ease forwards;
-}
-
-/* Tallo */
-
-.tallo{
-    position:absolute;
-    width:8px;
-    height:0;
-    background:linear-gradient(to top,#145a32,#2ecc71);
-    left:50%;
-    transform:translateX(-50%);
-    bottom:0;
-    border-radius:20px;
-    animation:crecerTallo 2s forwards;
-}
-
-/* Centro */
-
-.centro{
-    position:absolute;
-    width:26px;
-    height:26px;
-    background:#ffd700;
-    border-radius:50%;
-    left:50%;
-    top:42px;
-    transform:translateX(-50%) scale(0);
-    z-index:5;
-    box-shadow:0 0 20px #ffd700;
-    animation:mostrarCentro 0.7s forwards;
-    animation-delay:1.8s;
-}
-
-/* Petalos */
-
-.petalo{
-    position:absolute;
-    width:34px;
-    height:60px;
-    border-radius:50%;
-    left:50%;
-    top:20px;
-    transform-origin:center 70px;
-    opacity:0;
-    filter:drop-shadow(0 0 10px pink);
-    animation:abrirPetalos 1s forwards;
-    animation-delay:2s;
-}
-
-/* Hojas */
-
-.hoja{
-    position:absolute;
-    width:26px;
-    height:50px;
-    background:#2ecc71;
-    border-radius:50%;
-    bottom:80px;
-}
-
-/* Animaciones */
-
-@keyframes crecerTallo{
-    from{
-        height:0;
-    }
-
-    to{
-        height:220px;
-    }
-}
-
-@keyframes mostrarCentro{
-    to{
-        transform:translateX(-50%) scale(1);
-    }
-}
-
-@keyframes abrirPetalos{
-    from{
-        opacity:0;
-        transform:translateX(-50%) scale(0);
-    }
-
-    to{
-        opacity:1;
-    }
-}
-
-@keyframes subirFlor{
-    from{
-        transform:translateY(200px);
-        opacity:0;
-    }
-
-    to{
-        transform:translateY(0);
-        opacity:1;
-    }
-}
-
-/* =========================
-   PARTICULAS
-========================= */
-
-.particula{
-    position:absolute;
-    border-radius:50%;
-    background:white;
-    opacity:0.7;
-    animation:flotar linear infinite;
-}
-
-@keyframes flotar{
-    from{
-        transform:translateY(100vh);
-        opacity:0;
-    }
-
-    20%{
-        opacity:1;
-    }
-
-    to{
-        transform:translateY(-120px);
-        opacity:0;
-    }
-}
-
-</style>
+        @keyframes fly {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- ======================
-     PREGUNTA
-======================= -->
-
 <div id="pregunta">
-
-    <h1>
-        ¿Merling es juega de viva? 😌
-    </h1>
-
+    <h1>¿Merling es juega de viva? 😌</h1>
     <div class="botones">
-
-        <button id="si">
-            Sí
-        </button>
-
-        <button id="no">
-            No
-        </button>
-
+        <button id="si">Sí</button>
+        <button id="no">No</button>
     </div>
-
 </div>
 
-<!-- ======================
-     ESCENA FLORES
-======================= -->
-
 <div id="escena">
-
-    <div id="mensaje">
-        Flores para la más juega de viva 🌸
-    </div>
-
+    <div id="mensaje">Flores para la más juega de viva 🌸</div>
 </div>
 
 <script>
+    const btnSi = document.getElementById('si');
+    const btnNo = document.getElementById('no');
+    const escena = document.getElementById('escena');
+    const pregunta = document.getElementById('pregunta');
 
-/* =========================
-   BOTON NO
-========================= */
-
-const botonNo =
-    document.getElementById("no");
-
-function moverBoton(){
-
-    const margen = 20;
-
-    const maxX =
-        window.innerWidth
-        - botonNo.offsetWidth
-        - margen;
-
-    const maxY =
-        window.innerHeight
-        - botonNo.offsetHeight
-        - margen;
-
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
-
-    botonNo.style.left = x + "px";
-    botonNo.style.top = y + "px";
-}
-
-/* PC */
-
-botonNo.addEventListener(
-    "mouseenter",
-    moverBoton
-);
-
-/* TELEFONO */
-
-botonNo.addEventListener(
-    "touchstart",
-    (e)=>{
-
-        e.preventDefault();
-        moverBoton();
-
+    /* --- LÓGICA BOTÓN NO (Huir) --- */
+    function moverBoton() {
+        const x = Math.random() * (window.innerWidth - btnNo.offsetWidth - 40);
+        const y = Math.random() * (window.innerHeight - btnNo.offsetHeight - 40);
+        btnNo.style.left = `${x}px`;
+        btnNo.style.top = `${y}px`;
     }
-);
 
-/* =========================
-   CLICK SI
-========================= */
+    btnNo.addEventListener('mouseenter', moverBoton);
+    btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); moverBoton(); });
 
-document.getElementById("si")
-.addEventListener("click", ()=>{
+    /* --- ACCIÓN BOTÓN SÍ --- */
+    btnSi.addEventListener('click', () => {
+        pregunta.style.opacity = '0';
+        setTimeout(() => {
+            pregunta.style.display = 'none';
+            escena.style.display = 'block';
+            iniciarEfecto();
+        }, 1000);
+    });
 
-    document.getElementById("pregunta")
-    .style.display = "none";
-
-    document.getElementById("escena")
-    .style.display = "block";
-
-    crearFlores();
-    crearParticulas();
-
-});
-
-/* =========================
-   CREAR FLORES
-========================= */
-
-function crearFlores(){
-
-    for(let i=0;i<14;i++){
-
-        const flor =
-            document.createElement("div");
-
-        flor.classList.add("flor");
-
-        flor.style.left =
-            (Math.random()*90) + "%";
-
-        flor.style.animationDelay =
-            (Math.random()*2) + "s";
-
-        /* TALLO */
-
-        const tallo =
-            document.createElement("div");
-
-        tallo.classList.add("tallo");
-
-        /* CENTRO */
-
-        const centro =
-            document.createElement("div");
-
-        centro.classList.add("centro");
-
-        /* HOJAS */
-
-        const hoja1 =
-            document.createElement("div");
-
-        hoja1.classList.add("hoja");
-
-        hoja1.style.left = "40px";
-        hoja1.style.transform =
-            "rotate(-35deg)";
-
-        const hoja2 =
-            document.createElement("div");
-
-        hoja2.classList.add("hoja");
-
-        hoja2.style.left = "55px";
-        hoja2.style.transform =
-            "rotate(35deg)";
-
-        /* PETALOS */
-
-        for(let p=0;p<10;p++){
-
-            const petalo =
-                document.createElement("div");
-
-            petalo.classList.add("petalo");
-
-            petalo.style.transform =
-                `translateX(-50%) rotate(${p*36}deg)`;
-
-            petalo.style.background =
-                `hsl(${Math.random()*360},
-                90%,75%)`;
-
-            flor.appendChild(petalo);
+    function iniciarEfecto() {
+        for (let i = 0; i < 12; i++) {
+            setTimeout(crearFlorRealista, i * 400);
         }
-
-        flor.appendChild(tallo);
-        flor.appendChild(centro);
-        flor.appendChild(hoja1);
-        flor.appendChild(hoja2);
-
-        document.getElementById("escena")
-        .appendChild(flor);
+        crearLluviaMagica();
     }
-}
 
-/* =========================
-   PARTICULAS
-========================= */
+    /* --- GENERADOR DE FLORES SVG --- */
+    function crearFlorRealista() {
+        const contenedor = document.createElement('div');
+        contenedor.classList.add('flower-container');
+        
+        const size = Math.random() * 150 + 200; // Tamaño aleatorio
+        const posX = Math.random() * 90; // Posición aleatoria
+        
+        contenedor.style.left = `${posX}%`;
+        contenedor.style.width = `${size}px`;
+        contenedor.style.height = `${size * 1.5}px`;
 
-function crearParticulas(){
+        // Colores aleatorios para los pétalos (tonos rosas y púrpuras)
+        const hue = Math.floor(Math.random() * 40) + 320; 
+        
+        // Estructura SVG de la flor
+        contenedor.innerHTML = `
+            <svg viewBox="0 0 200 400" width="100%" height="100%">
+                <!-- Tallo -->
+                <path d="M100,400 Q110,300 100,150" stroke="#2d5a27" stroke-width="6" fill="none" />
+                
+                <!-- Hojas -->
+                <ellipse cx="85" cy="300" rx="10" ry="25" fill="#3a7d34" transform="rotate(-30 85 300)" />
+                <ellipse cx="115" cy="260" rx="10" ry="25" fill="#3a7d34" transform="rotate(30 115 260)" />
 
-    setInterval(()=>{
+                <!-- Pétalos (Generados dinámicamente) -->
+                <g transform="translate(100, 150)">
+                    ${generarPetalosSVG(hue)}
+                    <!-- Centro de la flor -->
+                    <circle cx="0" cy="0" r="15" fill="url(#centroGradiente)" />
+                </g>
 
-        const p =
-            document.createElement("div");
+                <defs>
+                    <radialGradient id="centroGradiente">
+                        <stop offset="10%" stop-color="#ffeb3b" />
+                        <stop offset="90%" stop-color="#fbc02d" />
+                    </radialGradient>
+                </defs>
+            </svg>
+        `;
 
-        p.classList.add("particula");
+        escena.appendChild(contenedor);
+    }
 
-        const size =
-            Math.random()*6 + 2;
+    function generarPetalosSVG(hue) {
+        let petalosHTML = '';
+        for (let i = 0; i < 8; i++) {
+            const rotacion = i * 45;
+            petalosHTML += `
+                <path d="M0,0 Q-30,-60 0,-90 Q30,-60 0,0" 
+                      fill="hsl(${hue}, 80%, 70%)" 
+                      fill-opacity="0.8"
+                      stroke="hsl(${hue}, 80%, 40%)"
+                      stroke-width="1"
+                      transform="rotate(${rotacion})" />
+            `;
+        }
+        return petalosHTML;
+    }
 
-        p.style.width =
-            size + "px";
-
-        p.style.height =
-            size + "px";
-
-        p.style.left =
-            Math.random()*100 + "%";
-
-        p.style.animationDuration =
-            (4 + Math.random()*5) + "s";
-
-        document.getElementById("escena")
-        .appendChild(p);
-
-        setTimeout(()=>{
-            p.remove();
-        },10000);
-
-    },120);
-}
-
+    /* --- PARTICULAS DE FONDO --- */
+    function crearLluviaMagica() {
+        setInterval(() => {
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('sparkle');
+            const size = Math.random() * 4 + 2;
+            sparkle.style.width = `${size}px`;
+            sparkle.style.height = `${size}px`;
+            sparkle.style.left = `${Math.random() * 100}%`;
+            sparkle.style.boxShadow = `0 0 10px white`;
+            sparkle.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            
+            escena.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 5000);
+        }, 150);
+    }
 </script>
 
 </body>
